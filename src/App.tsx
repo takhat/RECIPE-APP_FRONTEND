@@ -28,6 +28,7 @@ const App = () => {
     try {
       const nextRecipes = await api.searchRecipes(searchTerm, nextPage, diet);
       setRecipes([...recipes, ...nextRecipes.results]); // Append new recipes to existing ones
+      pageNumber.current = nextPage; // Update the current page number
     } catch (err) {
       console.log('Error fetching more recipes:', err);
     }
