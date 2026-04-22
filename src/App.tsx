@@ -3,12 +3,14 @@ import { useState, useRef } from 'react';
 import * as api from './api';
 import { type Recipe } from './types';
 import RecipeCard from './components/RecipeCard';
+import RecipeModal from './components/RecipeModal';
 
 
 const App = () => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [diet] = useState('Lacto-Vegetarian');
   const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const [selectedRecipe, setSelectedRecipe] = useState<Recipe | undefined>(undefined);
   const pageNumber = useRef(1);
 
   // Function that gets called when the user submits the search term. 
@@ -18,6 +20,7 @@ const App = () => {
     try {
       const recipes = await api.searchRecipes(searchTerm, 1, diet);
       setRecipes(recipes.results);
+      pageNumber.current = 1; // Reset page number to 1 for new search
     } catch (err) {
       console.log('Error fetching recipes:', err);
     }
@@ -42,10 +45,11 @@ const App = () => {
       </form>
 
       {recipes?.map((recipe) => (
-        <RecipeCard recipe={recipe}/>
+        <RecipeCard recipe={recipe} onClick={() => setSelectedRecipe(recipe)} />
       ))}
       <button className='view-more-button' onClick={handleViewMoreClick}>View More</button>
-    </div>
+      {selectedRecipe ? <RecipeModal /> : null}
+      </div>
   );
 };
 
