@@ -55,6 +55,15 @@ const App = () => {
     }
   };
 
+  const addFavoriteRecipe = async (recipe: Recipe) => {
+    try {
+      await api.addFavoriteRecipe(recipe);
+      setFavoriteRecipes([...favoriteRecipes, recipe]); // Update the state to include the new favorite recipe  
+    } catch (err) {
+      console.log('Error adding favorite recipe:', err);
+    }
+  };
+
   return (
     <div>
       <div className='tabs'>
@@ -73,7 +82,7 @@ const App = () => {
           </form>
 
             {recipes?.map((recipe) => (
-        <RecipeCard recipe={recipe} onClick={() => setSelectedRecipe(recipe)} />
+        <RecipeCard recipe={recipe} onClick={() => setSelectedRecipe(recipe)} onFavoriteButtonClick={addFavoriteRecipe} />
       ))}
       <button className='view-more-button' onClick={handleViewMoreClick}>View More</button>
         </>
@@ -81,7 +90,10 @@ const App = () => {
       {selectedTab === 'favorites' && (
           <div className='recipe-grid'>
             {favoriteRecipes.map((recipe) => 
-              <RecipeCard recipe={recipe} onClick={() => setSelectedRecipe(recipe)} />
+              <RecipeCard recipe={recipe} onClick={() => setSelectedRecipe(recipe)} 
+              onFavoriteButtonClick={
+                ()=> undefined
+              } />  
             )}
           </div>
       )}

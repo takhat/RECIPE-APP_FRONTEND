@@ -1,3 +1,5 @@
+import type { Recipe } from "./types";
+
 export const searchRecipes = async (searchTerm: string, page: number, diet: string) => {
   const baseUrl = new URL(`http://localhost:5001/api/recipes/search?`);
   baseUrl.searchParams.append("diet", diet);
@@ -33,4 +35,23 @@ export const getFavoriteRecipes = async () => {
   }
 
   return await response.json();
+};
+
+export const addFavoriteRecipe = async (recipe: Recipe) => {
+  const url = new URL(`http://localhost:5001/api/recipes/favorite`);
+  const body = {
+    recipeId: recipe.id
+  };
+
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(body)
+  }); 
+  
+  if (!response.ok) {
+    throw new Error(`HTTP error! Status: ${response.status}`);
+  }
 };
