@@ -35,3 +35,9 @@
   max-width: 500px;
 }
 
+.tabs {
+  display: flex;
+  gap: 2em;
+  cursor: pointer;
+}
+
