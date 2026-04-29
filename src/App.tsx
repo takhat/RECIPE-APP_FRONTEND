@@ -64,6 +64,16 @@ const App = () => {
     }
   };
 
+  const removeFavoriteRecipe = async (recipe: Recipe) => {
+    try {
+      await api.removeFavoriteRecipe(recipe);
+      const updatedFavRecipes = favoriteRecipes.filter(favRecipe => favRecipe.id !== recipe.id);
+      setFavoriteRecipes(updatedFavRecipes); // Update the state to remove the unfavorited recipe
+    } catch (err) {
+      console.log('Error removing favorite recipe:', err);
+    }
+  };
+
   return (
     <div>
       <div className='tabs'>
@@ -81,9 +91,15 @@ const App = () => {
             <button type="submit">Submit</button>
           </form>
 
-            {recipes?.map((recipe) => (
-        <RecipeCard recipe={recipe} onClick={() => setSelectedRecipe(recipe)} onFavoriteButtonClick={addFavoriteRecipe} />
-      ))}
+            {recipes?.map((recipe) => {
+              const isFavorite = favoriteRecipes.some(favorite => favorite.id === recipe.id);
+        return (
+          <RecipeCard recipe={recipe} 
+          onClick={() => setSelectedRecipe(recipe)} 
+          onFavoriteButtonClick={isFavorite ? removeFavoriteRecipe : addFavoriteRecipe} 
+          isFavorite={isFavorite} />
+        );
+      })}
       <button className='view-more-button' onClick={handleViewMoreClick}>View More</button>
         </>
       )}
@@ -91,9 +107,7 @@ const App = () => {
           <div className='recipe-grid'>
             {favoriteRecipes.map((recipe) => 
               <RecipeCard recipe={recipe} onClick={() => setSelectedRecipe(recipe)} 
-              onFavoriteButtonClick={
-                ()=> undefined
-              } />  
+              onFavoriteButtonClick={removeFavoriteRecipe} isFavorite={true} />
             )}
           </div>
       )}
