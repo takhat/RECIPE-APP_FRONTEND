@@ -1,7 +1,7 @@
 # RECIPE_APP
-# [DEMO](https://youtu.be/-e37_cer0GY)
+# [DEMO](https://youtu.be/-e37_cer0GY) | [Backend](https://github.com/takhat/RECIPE-APP-BACKEND)
 
-A Reach Frontend that uses Node backend to call 3rd party apis for recipes. It uses PostgresSql db - offered by Neon DB serverless db service to store, update, and retrieve favorite recipe ids.
+A Recipe app created using React Frontend that uses Node backend to call 3rd party apis for recipes. It uses PostgresSql db - offered by Neon DB serverless db service to store, update, and retrieve favorite recipe ids.
 
 ## Frontend - 
 ### src/components
