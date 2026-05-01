@@ -1,75 +1,54 @@
-# React + TypeScript + Vite
+# RECIPE_APP
+# [DEMO](https://youtu.be/-e37_cer0GY)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A Reach Frontend that uses Node backend to call 3rd party apis for recipes. It uses PostgresSql db - offered by Neon DB serverless db service to store, update, and retrieve favorite recipe ids.
 
-Currently, two official plugins are available:
+## Frontend - 
+### src/components
+1. Recipe Card 
+2. Recipe Modal
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+### src/App.tsx
+1. fetchFavoriteRecipes: A useEffect Hook to fetch all favorited recipes when the page loads.
+2. handleSearchSubmit: gets called when the user clicks the "search" icon after entering a "search term" to fetch the recipes.
+3. handleViewMoreClick: gets called when the user clicks the "view more" button to view additional recipes.
+4. addFavoriteRecipe: gets called when the user clicks the "heart" icon on the recipe card to favorite a recipe. Favorited recipes appear in the "Favorites" tab.
+5. removeFavoriteRecipe: gets called when the user click the "heart" icon again to unfavorite a recipe. Unfavorited recipes get removed from the "Favorites" tab. 
 
-## React Compiler
+### src/types.ts
+1. Recipe interface 
+2. Recipe Summary interface
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+### src/api.ts
+1. searchRecipes() = `<localBaseUrl>/api/recipes/search?searchTerm=<soup>&page=<1>`
+Returns recipes based on the search term and page number (returns 10 per page). Displayed as recipe cards in "Recipe Search" tab.
+2. getRecipeSummary() = `<localBaseUrl>/api/recipes/${recipeId}/summary`
+Returns recipe summary when a specific recipe card is clicked. Displayed as recipe modal.
+3. getFavoriteRecipes() = GET `<localBaseUrl>/api/recipes/favorite`
+Returns a collection of favorite recipes. Displayed as recipe cards in "Favorites" tab.
+4. addFavoriteRecipe() = POST `<localBaseUrl>/api/recipes/favorite` 
+Adds a recipe to favorites. Displayed as a recipe card in "Favorites" tab.
+5. deleteFavoriteRecipe() = DELETE `<localBaseUrl>/api/recipes/favorite`
+Removes a recipe from favorites. The recipe card no longer appears in the "Favorites" tab.
 
-Note: This will impact Vite dev & build performances.
+### src/App.css
+Styles the App.
 
-## Expanding the ESLint configuration
+## Backend - 
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### src/prisma/schema
+Defines the model. 
+`Prisma` lets us interact with the db using code.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### src/index.ts
+Handles api calls using `Express`.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### src/recipe-api.ts
+1. searchRecipes() = `<3rdPartybaseUrl>/api/recipes/search?searchTerm=<soup>&page=<1>`
+Takes a search term and calls 3rd party api to return a collection of recipes by that term.
+2. getRecipeSummary() = `<3rdPartybaseUrl>/api/recipes/${recipeId}/summary`
+Takes a recipe id and calls 3rd party api to return recipe summary for that recipe. (displayed as modal)
+3. getFavoriteRecipesByIDs() = `3rdPartybaseUrl/recipes/informationBulk`
+Takes a list of recipe ids and calls 3rd party api to return recipe data for those ids.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Ref : https://www.freecodecamp.org/news/full-stack-project-create-a-recipe-app-using-react-node-js/
